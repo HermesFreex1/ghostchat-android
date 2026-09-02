@@ -24,3 +24,5 @@ android/app/build/
 
 # TypeScript
 *.tsbuildinfo
+.github/workflows/build.yml
+.github/workflows/
