@@ -22,21 +22,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
       - name: Build web app
-        run: npm run build
+        run: npx vite build
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Setup Capacitor
-        run: |
-          npx cap add android
-          npx cap sync android
+      - name: Sync Capacitor
+        run: npx cap sync android
 
       - name: Build Debug APK
         run: |
@@ -44,12 +41,11 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ghostchat-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
-          compression-level: 6
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -58,8 +54,6 @@ jobs:
           name: GhostChat v1.0.0
           body: GhostChat - Anonymous P2P Messenger
           files: android/app/build/outputs/apk/debug/app-debug.apk
-          draft: false
-          prerelease: false
           overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
